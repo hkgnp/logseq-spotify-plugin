@@ -1,8 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Player = (props) => {
+interface PlayerProps {
+  isPlaying: boolean;
+  getCurrentlyPlaying(): void;
+  songDuration: number;
+  album: {
+    images: any[];
+  };
+  name: string;
+  artists: any[];
+  deviceName: string;
+}
+
+const Player: React.FC<PlayerProps> = (props) => {
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
+
+  useEffect(() => {
+    let intervalTime = 30000;
+    window.setInterval(() => {
+      props.getCurrentlyPlaying();
+    }, intervalTime);
+  }, []);
 
   const handlePlayer = async (option: string) => {
     await axios({
@@ -109,6 +128,9 @@ const Player = (props) => {
           {/* NEXT */}
         </div>
         {/* BUTTONS CONTAINER */}
+        <div className="text-xs mt-4 text-center">
+          Playing on {props.deviceName}
+        </div>
       </div>
       {/* ARTISTS AND BUTTONS CONTAINER */}
     </div>

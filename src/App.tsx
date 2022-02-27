@@ -5,7 +5,26 @@ import Login from './Login';
 import Player from './Player';
 import { callApi } from './callApi';
 
-const App = (props) => {
+interface playingDataProps {
+  currentlyPlayingData?: {
+    item: {
+      name: string;
+      album: {
+        images: any[];
+      };
+      artists: any[];
+      duration_ms: number;
+    };
+    artists: any[];
+    album: {};
+    is_playing: boolean;
+    device: {
+      name: string;
+    };
+  };
+}
+
+const App: React.FC<playingDataProps> = (props) => {
   const [token, setToken] = useState(logseq.settings.token);
   const [loaded, setLoaded] = useState(false);
   const [currentlyPlaying, setCurrentPlaying] = useState(
@@ -30,10 +49,6 @@ const App = (props) => {
   };
 
   const getCurrentlyPlaying = () => {
-    logseq.updateSettings({
-      token: token,
-    });
-
     window.setTimeout(async () => {
       const response = await callApi();
 
@@ -54,6 +69,7 @@ const App = (props) => {
         );
         setLoaded(false);
         setToken('');
+        return;
       }
     }, 500);
   };
@@ -81,6 +97,8 @@ const App = (props) => {
             artists={currentlyPlaying.item.artists}
             album={currentlyPlaying.item.album}
             isPlaying={currentlyPlaying.is_playing}
+            deviceName={currentlyPlaying.device.name}
+            songDuration={currentlyPlaying.item.duration_ms}
             getCurrentlyPlaying={getCurrentlyPlaying}
           />
         )}
