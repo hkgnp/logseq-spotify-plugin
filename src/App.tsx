@@ -49,6 +49,10 @@ const App: React.FC<playingDataProps> = (props) => {
   };
 
   const getCurrentlyPlaying = () => {
+    logseq.updateSettings({
+      token: token,
+    });
+
     window.setTimeout(async () => {
       const response = await callApi();
 

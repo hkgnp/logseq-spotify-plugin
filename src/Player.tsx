@@ -16,12 +16,12 @@ interface PlayerProps {
 const Player: React.FC<PlayerProps> = (props) => {
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 
-  useEffect(() => {
-    let intervalTime = 30000;
-    window.setInterval(() => {
-      props.getCurrentlyPlaying();
-    }, intervalTime);
-  }, []);
+  // useEffect(() => {
+  //   let intervalTime = 30000;
+  //   window.setInterval(() => {
+  //     props.getCurrentlyPlaying();
+  //   }, intervalTime);
+  // }, []);
 
   const handlePlayer = async (option: string) => {
     await axios({

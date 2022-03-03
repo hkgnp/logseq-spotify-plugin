@@ -5,12 +5,6 @@ function Login(props: any) {
     top?.window.open('https://logseq-spotify.herokuapp.com/auth/login');
   };
 
-  const saveToken = () => {
-    logseq.updateSettings({
-      token: props.token,
-    });
-  };
-
   return (
     <div className="flex flex-col">
       <button
@@ -27,12 +21,6 @@ function Login(props: any) {
           onChange={props.handleAccessToken}
           value={props.token}
         />
-        <button
-          className="border-green-700 text-green-700 bg-white"
-          onClick={saveToken}
-        >
-          Save Token
-        </button>
         <button
           className="bg-green-700 text-white font-bold w-1/6 rounded-lg text-xs hover:bg-green-300"
           onClick={props.getCurrentlyPlaying}
