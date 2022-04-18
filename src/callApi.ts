@@ -1,12 +1,11 @@
-import axios from 'axios';
-import resolveId from 'postcss-import/lib/resolve-id';
+import axios from "axios";
 
 export const callApi = async () => {
   return await axios({
-    method: 'get',
-    url: 'https://api.spotify.com/v1/me/player',
+    method: "get",
+    url: "https://api.spotify.com/v1/me/player?additional_types=episode",
     headers: {
-      Authorization: 'Bearer ' + logseq.settings.token,
+      Authorization: "Bearer " + logseq.settings.token,
     },
   })
     .then((response) => {

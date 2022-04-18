@@ -1,31 +1,31 @@
-import '@logseq/libs';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { callApi } from './callApi';
-import { handleClosePopup } from './handleClosePopup';
+import "@logseq/libs";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { callApi } from "./callApi";
+import { handleClosePopup } from "./handleClosePopup";
 
 const main = () => {
-  console.log('logseq-spotify-plugin loaded');
+  console.log("logseq-spotify-plugin loaded");
 
   if (!logseq.settings.token) {
     logseq.updateSettings({
-      token: '',
+      token: "",
     });
   }
 
   logseq.provideModel({
     async openWebPlayer() {
       // Check if token is empty in settings
-      if (logseq.settings.token !== '') {
+      if (logseq.settings.token !== "") {
         const response = await callApi();
 
         if (response.status !== 200) {
           // Catch errors
           if (response.data.error.message) {
             logseq.App.showMsg(
-              'Invalid access token. Please login, get the token and try again.',
-              'error'
+              "Invalid access token. Please login, get the token and try again.",
+              "error"
             );
           }
 
@@ -33,14 +33,14 @@ const main = () => {
             <React.StrictMode>
               <App />
             </React.StrictMode>,
-            document.getElementById('app')
+            document.getElementById("app")
           );
 
           logseq.showMainUI();
         } else if (response.status === 204) {
           logseq.App.showMsg(
-            'Please ensure that Spotify is running and a song is playing.',
-            'error'
+            "Please ensure that Spotify is running and a song is playing.",
+            "error"
           );
           return;
         } else {
@@ -49,7 +49,7 @@ const main = () => {
             <React.StrictMode>
               <App currentlyPlayingData={response.data} />
             </React.StrictMode>,
-            document.getElementById('app')
+            document.getElementById("app")
           );
 
           logseq.showMainUI();
@@ -60,7 +60,7 @@ const main = () => {
           <React.StrictMode>
             <App />
           </React.StrictMode>,
-          document.getElementById('app')
+          document.getElementById("app")
         );
 
         logseq.showMainUI();
@@ -71,8 +71,8 @@ const main = () => {
   handleClosePopup();
 
   // Register UI
-  logseq.App.registerUIItem('toolbar', {
-    key: 'logseq-spotify-plugin',
+  logseq.App.registerUIItem("toolbar", {
+    key: "logseq-spotify-plugin",
     template: `
                 <a data-on-click="openWebPlayer" class="button">
                 <i class="ti ti-brand-spotify"></i>

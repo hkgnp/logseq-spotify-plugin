@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 interface PlayerProps {
   isPlaying: boolean;
@@ -8,33 +8,32 @@ interface PlayerProps {
   album: {
     images: any[];
   };
+  images?: any[];
   name: string;
   artists: any[];
   deviceName: string;
+  show: {
+    name: string;
+    publisher: string;
+    images: any[];
+  };
 }
 
 const Player: React.FC<PlayerProps> = (props) => {
   const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 
-  // useEffect(() => {
-  //   let intervalTime = 30000;
-  //   window.setInterval(() => {
-  //     props.getCurrentlyPlaying();
-  //   }, intervalTime);
-  // }, []);
-
   const handlePlayer = async (option: string) => {
     await axios({
-      method: option === 'previous' || option === 'next' ? 'post' : 'put',
+      method: option === "previous" || option === "next" ? "post" : "put",
       url: `https://api.spotify.com/v1/me/player/${option}`,
       headers: {
-        Authorization: 'Bearer ' + logseq.settings.token,
+        Authorization: "Bearer " + logseq.settings.token,
       },
     });
 
-    if (option === 'pause') {
+    if (option === "pause") {
       setIsPlaying(false);
-    } else if (option === 'play') {
+    } else if (option === "play") {
       setIsPlaying(true);
     } else {
       props.getCurrentlyPlaying();
@@ -47,7 +46,9 @@ const Player: React.FC<PlayerProps> = (props) => {
       <div className="w-1/2">
         <img
           className="w-full rounded  md:block"
-          src={props.album.images[0].url}
+          src={
+            props.album ? props.album.images[0].url : props.show.images[0].url
+          }
           alt="Album Pic"
         />
       </div>
@@ -56,20 +57,22 @@ const Player: React.FC<PlayerProps> = (props) => {
       {/* ARTIST AND BUTTONS CONTAINER */}
       <div className="p-4 flex flex-col justify-center w-1/2 items-center">
         <h3 className="text-base text-center text-grey-darkest font-medium">
-          {props.name}
+          {props.name || props.show.name}
         </h3>
-        {props.artists
-          ? props.artists.map((a) => (
-              <p className="text-sm text-grey mt-1">{a.name}</p>
-            ))
-          : ''}
+        {props.artists ? (
+          props.artists.map((a) => (
+            <p className="text-sm text-grey mt-1">{a.name}</p>
+          ))
+        ) : (
+          <p className="text-sm text-grey mt-1">{props.show.publisher}</p>
+        )}
 
         {/* BUTTONS CONTAINER */}
         <div className="flex flex-row mt-4 items-center">
           {/* PREV */}
           <div className="text-grey-darker mr-3" id="prev">
             <svg
-              onClick={() => handlePlayer('previous')}
+              onClick={() => handlePlayer("previous")}
               className="w-8 h-8 cursor-pointer"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +87,7 @@ const Player: React.FC<PlayerProps> = (props) => {
           {isPlaying ? (
             <div className="text-green-800 p-2 rounded-full border border-green-800 shadow-lg hover:text-white hover:bg-green-800">
               <svg
-                onClick={() => handlePlayer('pause')}
+                onClick={() => handlePlayer("pause")}
                 className="w-5 h-5 m-0 cursor-pointer"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +99,7 @@ const Player: React.FC<PlayerProps> = (props) => {
           ) : (
             <div className="text-green-800 p-2 rounded-full border border-green-800 shadow-lg hover:text-white hover:bg-green-800">
               <svg
-                onClick={() => handlePlayer('play')}
+                onClick={() => handlePlayer("play")}
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5 m-0 icon icon-tabler icon-tabler-player-play cursor-pointer"
                 viewBox="0 0 24 24"
@@ -116,7 +119,7 @@ const Player: React.FC<PlayerProps> = (props) => {
           {/* NEXT */}
           <div className="text-grey-darker ml-3">
             <svg
-              onClick={() => handlePlayer('next')}
+              onClick={() => handlePlayer("next")}
               className="w-8 h-8 cursor-pointer"
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
@@ -133,6 +136,12 @@ const Player: React.FC<PlayerProps> = (props) => {
         </div>
       </div>
       {/* ARTISTS AND BUTTONS CONTAINER */}
+      <div
+        className="absolute top-2 right-3 text-green-700 text-xs hover:cursor-pointer"
+        onClick={props.getCurrentlyPlaying}
+      >
+        Refresh
+      </div>
     </div>
   );
 };

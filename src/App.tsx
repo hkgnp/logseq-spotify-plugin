@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './App.css';
-import Login from './Login';
-import Player from './Player';
-import { callApi } from './callApi';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import Login from "./Login";
+import Player from "./Player";
+import { callApi } from "./callApi";
 
 interface playingDataProps {
   currentlyPlayingData?: {
@@ -14,6 +13,11 @@ interface playingDataProps {
       };
       artists: any[];
       duration_ms: number;
+      show: {
+        name: string;
+        publisher: string;
+        images: any[];
+      };
     };
     artists: any[];
     album: {};
@@ -33,16 +37,16 @@ const App: React.FC<playingDataProps> = (props) => {
 
   useEffect(() => {
     if (
-      logseq.settings.token !== '' &&
+      logseq.settings.token !== "" &&
       props.currentlyPlayingData !== undefined
     ) {
       setCurrentPlaying(props.currentlyPlayingData);
       setLoaded(true);
     } else {
-      setToken('');
+      setToken("");
       setLoaded(false);
     }
-  }, [props.currentlyPlayingData]);
+  }, []);
 
   const handleAccessToken = (e: Event) => {
     setToken((e.target as HTMLInputElement).value);
@@ -59,8 +63,8 @@ const App: React.FC<playingDataProps> = (props) => {
       if (response.status === 204) {
         logseq.hideMainUI();
         logseq.App.showMsg(
-          'Please ensure that Spotify is running and a song is playing.',
-          'error'
+          "Please ensure that Spotify is running and a song is playing.",
+          "error"
         );
         return;
       } else if (response.status === 200) {
@@ -68,11 +72,11 @@ const App: React.FC<playingDataProps> = (props) => {
         setLoaded(true);
       } else {
         logseq.App.showMsg(
-          'Your access token has expired. Please login above, grab the access token, and try again',
-          'error'
+          "Your access token has expired. Please login above, grab the access token, and try again",
+          "error"
         );
         setLoaded(false);
-        setToken('');
+        setToken("");
         return;
       }
     }, 500);
@@ -85,7 +89,7 @@ const App: React.FC<playingDataProps> = (props) => {
     >
       <div
         className="absolute top-10 bg-white rounded-lg p-3 border flex flex-col justify-center"
-        style={{ width: '28rem' }}
+        style={{ width: "28rem" }}
       >
         {/* Insert here */}
         {!loaded && (
@@ -103,6 +107,7 @@ const App: React.FC<playingDataProps> = (props) => {
             isPlaying={currentlyPlaying.is_playing}
             deviceName={currentlyPlaying.device.name}
             songDuration={currentlyPlaying.item.duration_ms}
+            show={currentlyPlaying.item.show}
             getCurrentlyPlaying={getCurrentlyPlaying}
           />
         )}
